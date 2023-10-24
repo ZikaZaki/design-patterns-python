@@ -1,8 +1,9 @@
 """
 Basic video exporting example
 """
-from typing import Protocol
+from typing import Protocol, Type
 from pathlib import Path
+from dataclasses import dataclass
 
 
 class VideoExporter(Protocol):
@@ -74,15 +75,27 @@ class WAVAudioExporter:
   def do_export(self, folder: Path) -> None:
     print(f"Exporting audio data in WAV format to {folder}.")
 
+@dataclass
+class MediaExporter:
+  video: VideoExporter
+  audio: AudioExporter
 
+@dataclass
+class MediaExporterFactory:
+  video_class: Type[VideoExporter]
+  audio_class: Type[AudioExporter]
+  
+  def __call__(self) -> MediaExporter:
+    return MediaExporter(self.video_class(), self.audio_class())
+  
 FACTORIES = {
-  "low": (H264BPVideoExporter, AACAudioExporter),
-  "high": (H264Hi422PVideoExporter, AACAudioExporter),
-  "master": (LosslessVideoExporter, WAVAudioExporter),
+  "low": MediaExporterFactory(H264BPVideoExporter, AACAudioExporter),
+  "high": MediaExporterFactory(H264Hi422PVideoExporter, AACAudioExporter),
+  "master": MediaExporterFactory(LosslessVideoExporter, WAVAudioExporter),
 }
 
 # Helper function
-def read_factory() -> tuple[VideoExporter, AudioExporter]:
+def read_factory() -> MediaExporterFactory:
   """
   Constructs an exporter factory based on the user's preference.
   Returns: An exporter factory.
@@ -92,34 +105,33 @@ def read_factory() -> tuple[VideoExporter, AudioExporter]:
     export_quality = input(
         f"Enter desired output quality ({', '.join(FACTORIES)}): ")
     try:
-        video_class, audio_class = FACTORIES[export_quality]
-        return (video_class(), audio_class())
+        return FACTORIES[export_quality]
     except KeyError:
         print(f"Unknown output quality option: {export_quality}!")
 
-def do_export(fac: tuple[VideoExporter, AudioExporter]) -> None:
+def do_export(exporter: MediaExporter) -> None:
   """Do a test export using a video and audio exporters."""
 
-  # retrieve the exporters
-  video_exporter, audio_exporter = fac
-
   # prepare the export
-  video_exporter.prepare_export("placeholder_for_video_data")
-  audio_exporter.prepare_export("placeholder_for_audio_data")
+  exporter.video.prepare_export("placeholder_for_video_data")
+  exporter.audio.prepare_export("placeholder_for_audio_data")
 
   # do the export
   folder = Path("/usr/tmp/video")
-  video_exporter.do_export(folder)
-  audio_exporter.do_export(folder)
+  exporter.video.do_export(folder)
+  exporter.audio.do_export(folder)
 
 def main() -> None:
   """Main function."""
   
   # create the factory
   factory = read_factory()
+
+  # use the factory to create new media exporter
+  media_exporter = factory()
   
   # perform the exporting job
-  do_export(factory)
+  do_export(media_exporter)
   
 if __name__ == "__main__":
   main()
