@@ -75,49 +75,6 @@ class WAVAudioExporter:
     print(f"Exporting audio data in WAV format to {folder}.")
 
 
-class ExporterFactory(Protocol):
-  """
-  Factory that represents a combination of video and audio codecs.
-  The factory doesn't maintain any of the instances it creates.
-  """
-
-  def get_video_exporter(self) -> VideoExporter:
-    """Returns a new video exporter instance."""
-
-  def get_audio_exporter(self) -> AudioExporter:
-    """Returns a new audio exporter instance."""
-
-
-class FastExporter:
-  """Factory aimed at providing a high speed, lower quality export."""
-
-  def get_video_exporter(self) -> VideoExporter:
-    return H264BPVideoExporter()
-
-  def get_audio_exporter(self) -> AudioExporter:
-    return AACAudioExporter()
-
-
-class HighQualityExporter:
-  """Factory aimed at providing a slower speed, high quality export."""
-
-  def get_video_exporter(self) -> VideoExporter:
-    return H264Hi422PVideoExporter()
-
-  def get_audio_exporter(self) -> AudioExporter:
-    return AACAudioExporter()
-
-
-class MasterQualityExporter:
-  """Factory aimed at providing a high speed, high quality export."""
-
-  def get_video_exporter(self) -> VideoExporter:
-    return LosslessVideoExporter()
-
-  def get_audio_exporter(self) -> AudioExporter:
-    return WAVAudioExporter()
-
-
 FACTORIES = {
   "low": (H264BPVideoExporter, AACAudioExporter),
   "high": (H264Hi422PVideoExporter, AACAudioExporter),
