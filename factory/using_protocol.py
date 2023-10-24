@@ -125,7 +125,7 @@ FACTORIES = {
 }
 
 # Helper function
-def read_factory() -> ExporterFactory:
+def read_factory() -> tuple[VideoExporter, AudioExporter]:
   """
   Constructs an exporter factory based on the user's preference.
   Returns: An exporter factory.
@@ -135,16 +135,16 @@ def read_factory() -> ExporterFactory:
     export_quality = input(
         f"Enter desired output quality ({', '.join(FACTORIES)}): ")
     try:
-        return FACTORIES[export_quality]
+        video_class, audio_class = FACTORIES[export_quality]
+        return (video_class(), audio_class())
     except KeyError:
         print(f"Unknown output quality option: {export_quality}!")
 
-def do_export(fac: ExporterFactory) -> None:
+def do_export(fac: tuple[VideoExporter, AudioExporter]) -> None:
   """Do a test export using a video and audio exporters."""
 
   # retrieve the exporters
-  video_exporter = fac.get_video_exporter()
-  audio_exporter = fac.get_audio_exporter()
+  video_exporter, audio_exporter = fac
 
   # prepare the export
   video_exporter.prepare_export("placeholder_for_video_data")
