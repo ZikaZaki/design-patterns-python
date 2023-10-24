@@ -30,7 +30,7 @@ To implement the Factory pattern in Python, follow these steps:
 
 4. Client code interacts with the factory class to create objects, without knowing the specific implementation details. The client code can use the objects returned by the factory without being aware of the concrete classes.
 
-Here's an example illustrating the Factory pattern using an abstract class in Python:
+Here's an example illustrating the Factory pattern using an **abstract** class in Python:
 
 ```python
 from abc import ABC, abstractmethod
@@ -62,3 +62,31 @@ class ShapeFactory:
 factory = ShapeFactory()
 circle = factory.create_shape("circle")
 circle.draw()
+```
+
+Here's another example illustrating the Factory pattern using a neat new feature **Protocols**, which is an alternative to abstract base classes:
+
+```python
+from typing import Protocol
+
+class Drawable(Protocol):
+    def draw(self) -> None:
+        pass
+
+class Circle:
+    def draw(self) -> None:
+        print("Drawing a circle")
+
+class Square:
+    def draw(self) -> None:
+        print("Drawing a square")
+
+def draw_shape(shape: Drawable) -> None:
+    shape.draw()
+
+circle = Circle()
+square = Square()
+
+draw_shape(circle)  # Output: Drawing a circle
+draw_shape(square)  # Output: Drawing a square
+```
