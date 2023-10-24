@@ -126,46 +126,51 @@ class MasterQualityExporter(ExporterFactory):
     return WAVAudioExporter()
 
 
+FACTORIES = {
+  "low": FastExporter(),
+  "high": HighQualityExporter(),
+  "master": MasterQualityExporter(),
+}
+
 # Helper function
 def read_exporter() -> ExporterFactory:
   """
   Constructs an exporter factory based on the user's preference.
   Returns: An exporter factory.
   """
-  factories = {
-      "low": FastExporter(),
-      "high": HighQualityExporter(),
-      "master": MasterQualityExporter()
-  }
   # read the desired export quality
   while True:
     export_quality = input(
-        "Enter desired output quality (low, high, master): ")
-    if export_quality in factories:
-      return factories[export_quality]
-    print(f"Unknown output quality option: {export_quality}!")
+        f"Enter desired output quality ({', '.join(FACTORIES)}): ")
+    try:
+        return FACTORIES[export_quality]
+    except KeyError:
+        print(f"Unknown output quality option: {export_quality}!")
 
+def do_export(fac: ExporterFactory) -> None:
+"""Do a test export using a video and audio exporters."""
 
-# providing the factory as an argument to the main function,
-# adds more flexability than invoking the factory directly in the main.
-# This best practice is called (Dependency Injection).
-def main(fac: ExporterFactory) -> None:
+    # retrieve the exporters
+    video_exporter = fac.get_video_exporter()
+    audio_exporter = fac.get_audio_exporter()
+
+    # prepare the export
+    video_exporter.prepare_export("placeholder_for_video_data")
+    audio_exporter.preapre_export("placeholder_for_audio_data")
+
+    # do the export
+    folder = Path("/usr/tmp/video")
+    video_exporter.do_export(folder)
+    audio_exporter.do_export(folder)
+
+def main() -> None:
   """Main function."""
 
-  # retrieve the video and audio exporters
-  video_exporter = fac.get_video_exporter()
-  audio_exporter = fac.get_audio_exporter()
+  # create the factory
+  factory = read_factory()
 
-  # prepare the export
-  video_exporter.prepare_export("placeholder_for_video_data")
-  audio_exporter.prepare_export("placeholder_for_audio_data")
-
-  # do the export
-  folder = pathlib.Path("/usr/tmp/video")
-  video_exporter.do_export(folder)
-  audio_exporter.do_export(folder)
-
+  # perform the exporting job
+  do_export(factory)
 
 if __name__ == "__main__":
-  fac = read_exporter()
-  main(fac)
+  main()
