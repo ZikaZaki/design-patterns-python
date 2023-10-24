@@ -1,23 +1,21 @@
 """
 Basic video exporting example
 """
+from typing import Protocol
 from pathlib import Path
-from abc import ABC, abstractmethod
 
 
-class VideoExporter(ABC):
+class VideoExporter(Protocol):
   """Basic representation of video exporting codec."""
 
-  @abstractmethod
   def prepare_export(self, video_data):
     """Prepares video data for exporting."""
 
-  @abstractmethod
   def do_export(self, folder: Path):
     """Exports the video data to a folder."""
 
 
-class LosslessVideoExporter(VideoExporter):
+class LosslessVideoExporter:
   """Lossless video exporting codec."""
 
   def prepare_export(self, video_data):
@@ -27,7 +25,7 @@ class LosslessVideoExporter(VideoExporter):
     print(f"Exporting video data in lossless format to {folder}.")
 
 
-class H264BPVideoExporter(VideoExporter):
+class H264BPVideoExporter:
   """H.264 video exporting codec with Baseline profile."""
 
   def prepare_export(self, video_data):
@@ -37,7 +35,7 @@ class H264BPVideoExporter(VideoExporter):
     print(f"Exporting video data in H.264 (Baseline) format to {folder}.")
 
 
-class H264Hi422PVideoExporter(VideoExporter):
+class H264Hi422PVideoExporter:
   """H.264 video exporting codec with Hi422P profile (10-bit, 4:2:2 chroma sampling)."""
 
   def prepare_export(self, video_data):
@@ -47,19 +45,17 @@ class H264Hi422PVideoExporter(VideoExporter):
     print(f"Exporting video data in H.264 (Hi422P) format to {folder}.")
 
 
-class AudioExporter(ABC):
+class AudioExporter(Protocol):
   """Basic representation of audio exporting codec."""
 
-  @abstractmethod
   def prepare_export(self, audio_data):
     """Prepares audio data for exporting."""
 
-  @abstractmethod
   def do_export(self, folder: Path):
     """Exports the audio data to a folder."""
 
 
-class AACAudioExporter(AudioExporter):
+class AACAudioExporter:
   """AAC audio exporting codec."""
 
   def prepare_export(self, audio_data):
@@ -69,7 +65,7 @@ class AACAudioExporter(AudioExporter):
     print(f"Exporting audio data in AAC format to {folder}.")
 
 
-class WAVAudioExporter(AudioExporter):
+class WAVAudioExporter:
   """WAV (lossless) audio exporting codec."""
 
   def prepare_export(self, audio_data):
@@ -79,24 +75,20 @@ class WAVAudioExporter(AudioExporter):
     print(f"Exporting audio data in WAV format to {folder}.")
 
 
-class ExporterFactory(ABC):
+class ExporterFactory(Protocol):
   """
   Factory that represents a combination of video and audio codecs.
   The factory doesn't maintain any of the instances it creates.
   """
 
-  @abstractmethod
   def get_video_exporter(self) -> VideoExporter:
     """Returns a new video exporter instance."""
-    pass
 
-  @abstractmethod
   def get_audio_exporter(self) -> AudioExporter:
     """Returns a new audio exporter instance."""
-    pass
 
 
-class FastExporter(ExporterFactory):
+class FastExporter:
   """Factory aimed at providing a high speed, lower quality export."""
 
   def get_video_exporter(self) -> VideoExporter:
@@ -106,7 +98,7 @@ class FastExporter(ExporterFactory):
     return AACAudioExporter()
 
 
-class HighQualityExporter(ExporterFactory):
+class HighQualityExporter:
   """Factory aimed at providing a slower speed, high quality export."""
 
   def get_video_exporter(self) -> VideoExporter:
@@ -116,7 +108,7 @@ class HighQualityExporter(ExporterFactory):
     return AACAudioExporter()
 
 
-class MasterQualityExporter(ExporterFactory):
+class MasterQualityExporter:
   """Factory aimed at providing a high speed, high quality export."""
 
   def get_video_exporter(self) -> VideoExporter:
