@@ -119,9 +119,9 @@ class MasterQualityExporter:
 
 
 FACTORIES = {
-  "low": FastExporter(),
-  "high": HighQualityExporter(),
-  "master": MasterQualityExporter(),
+  "low": (H264BPVideoExporter, AACAudioExporter),
+  "high": (H264Hi422PVideoExporter, AACAudioExporter),
+  "master": (LosslessVideoExporter, WAVAudioExporter),
 }
 
 # Helper function
