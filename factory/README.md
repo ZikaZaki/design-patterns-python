@@ -48,6 +48,20 @@ When implementing the Factory pattern, the following principles are applied:
                             |                  |
                             +------------------+
 ```
+```angelscript
+This UML diagram represents the Factory Pattern using simple ASCII characters within GitHub Markdown syntax. The diagram consists of
+the following elements:
+
+- `Client`: Represents the client code that interacts with the factory to create products.
+- `Factory`: An abstract class or interface that declares the `createProduct()` method for creating products.
+- `Product`: Represents the abstract product class or interface that defines the common operations that concrete products must implement.
+- `ConcreteFactoryA`: A concrete factory that implements the `createProduct()` method to create `ConcreteProductA` objects.
+- `ConcreteProductA`: A concrete product class that implements the `Product` interface and defines its specific `operation()`.
+
+Please note that GitHub Markdown does not support interactive or dynamic diagrams. The above representation is a static UML diagram
+using ASCII characters within Markdown syntax. For a more interactive and visually appealing UML diagram, you may consider using
+dedicated UML diagramming tools or converting the diagram into an image format using tools like PlantUML or Mermaid.
+```
 ## Usage
 
 To implement the Factory pattern in Python, follow these steps:
