@@ -78,4 +78,3 @@ app.create_ticket("Bob Smith", "I need help with my TV.")
 
 # process the tickets
 app.process_tickets(RandomOrderingStrategy())
-
