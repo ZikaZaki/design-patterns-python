@@ -18,6 +18,36 @@ When implementing the Factory pattern, the following principles are applied:
 
 6. **Code Reusability:** The Factory pattern promotes code reusability by centralizing the object creation logic. The factory can be used in multiple parts of the codebase, preventing code duplication and ensuring consistent object creation.
 
+## UML Diagram
+```uml
+  +-----------------+       +------------------+
+  |     Client      |       |      Factory     |
+  +-----------------+       +------------------+
+  |                 |       |                  |
+  | + main()        |       | + createProduct()|
+  |                 |       |                  |
+  +--------^--------+       +--------^---------+
+           |                         |
+           |                         |
+           |                         |
+  +--------+--------+       +--------+---------+
+  |   Product       |       | ConcreteFactoryA |
+  +-----------------+       +------------------+
+  |                 |       |                  |
+  |  + operation()  |       | + createProduct()|
+  |                 |       |                  |
+  +-----------------+       +--------^---------+
+                                     |
+                                     |
+                                     |
+                            +--------v---------+
+                            | ConcreteProductA |
+                            +------------------+
+                            |                  |
+                            |  + operation()   |
+                            |                  |
+                            +------------------+
+```
 ## Usage
 
 To implement the Factory pattern in Python, follow these steps:
