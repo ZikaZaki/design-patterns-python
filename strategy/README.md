@@ -111,3 +111,87 @@ context.execute_strategy(data=[4, 2, 7, 1])  # Output: Sorting using QuickSort
 context.set_strategy(MergeSortStrategy())
 context.execute_strategy(data=[4, 2, 7, 1])  # Output: Sorting using MergeSort
 ```
+
+## Adding Options Parameters to Strategies
+
+When utilizing the strategy pattern, you may encounter scenarios where you need to attach options parameters to the strategies. These parameters allow you to customize the behavior of the strategies without modifying their implementation. Here are some possible ways to add options parameters to strategies:
+
+1. **Constructor Parameters**: Pass the options parameters as constructor arguments to the strategy class. This ensures that the options are provided when creating an instance of the strategy, and they remain immutable throughout its lifetime.
+
+     Example:
+    
+     ```python
+     class Strategy:
+         def __init__(self, option1, option2):
+             self.option1 = option1
+             self.option2 = option2
+    
+         def execute(self):
+             # Strategy execution with options
+             pass
+     ```
+
+2. **Setter Methods**: Define setter methods in the strategy class to allow the options parameters to be configured after the strategy instance is created. This approach provides flexibility in changing the options dynamically. However, it is essential to ensure that the strategy is in a valid state before executing it.
+
+    Example:
+    ```python
+    class Strategy:
+        def set_options(self, option1, option2):
+            self.option1 = option1
+            self.option2 = option2
+    
+        def execute(self):
+            # Strategy execution with options
+            pass
+    ```
+
+3. **Configuration Object**: Create a separate configuration object that encapsulates the options parameters related to the strategy. The strategy class can accept this configuration object as a parameter during construction or through a setter method. The configuration object can have appropriate getter methods to retrieve the specific options required by the strategy.
+
+    Example:
+    ```python
+    class StrategyConfig:
+        def __init__(self, option1, option2):
+            self.option1 = option1
+            self.option2 = option2
+    
+    class Strategy:
+        def __init__(self, config):
+            self.config = config
+    
+        def execute(self):
+            # Strategy execution with options from config
+            pass
+    
+    config = StrategyConfig(option1, option2)
+    strategy = Strategy(config)
+    ```
+
+4. **Context Class**: Implement a context class that encapsulates the strategy and the associated options parameters. The context class can have methods to set the options and execute the strategy. This approach centralizes the management of options and provides a single entry point for executing the strategy.
+
+    Example:
+    ```python
+    class Strategy:
+        def execute(self):
+            # Strategy execution with options from context
+            pass
+    
+    class Context:
+        def __init__(self, strategy):
+            self.strategy = strategy
+            self.option1 = None
+            self.option2 = None
+    
+        def set_options(self, option1, option2):
+            self.option1 = option1
+            self.option2 = option2
+    
+        def execute_strategy(self):
+            self.strategy.execute()
+    
+    strategy = Strategy()
+    context = Context(strategy)
+    context.set_options(option1, option2)
+    context.execute_strategy()
+    ```
+
+Choose the approach that best suits your requirements and the specific needs of your application. Consider factors such as flexibility, reusability, and maintainability when deciding how to attach options parameters to the strategies.
