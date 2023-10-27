@@ -2,6 +2,7 @@ import random
 import string
 from dataclasses import dataclass, field
 
+
 def generate_id(length: int = 8):
   """Helper function for generating an id."""
   return "".join(random.choices(string.ascii_uppercase, k=length))
@@ -22,4 +23,3 @@ class SupportTicket:
     print(f"Customer: {self.customer}.")
     print(f"Issue: {self.issue}.")
     print("===============================================")
-    
